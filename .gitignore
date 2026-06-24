@@ -17,4 +17,5 @@
 .env
 
 # Promptkit repository
-promptkit
+promptkit.
+.claude
