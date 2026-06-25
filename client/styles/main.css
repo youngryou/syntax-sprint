@@ -30,15 +30,49 @@ body {
 header {
   background-color: var(--bg-panel);
   border-bottom: 1px solid var(--border-color);
+  margin-bottom: 40px;
 }
 
-/* Layout & Navbar */
+/* Text Content */
+.page-title {
+  font-family: var(--font-mono);
+  font-size: 1.8rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+.page-subtitle {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  margin: 0;
+  margin-top: 10px;
+}
+
+.card-subtitle {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+/* Layout */
 .layout-container {
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
 }
 
+.page-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.page-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -74,4 +108,90 @@ header {
 
 .nav-links a.active {
   border-bottom-color: var(--accent-blue);
+}
+
+/* Cards */
+.card {
+  background-color: var(--bg-panel);
+  border: 1.5px solid var(--border-color);
+  border-radius: 8px;
+  padding: 35px 20px;
+}
+
+.card--green {
+  background-color: rgba(78, 201, 176, 0.1);
+  border-left: 4px solid var(--accent-green);
+}
+
+/* Buttons */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn--blue {
+  background-color: var(--accent-blue);
+  color: white;
+}
+
+.btn--dark {
+  background-color: var(--bg-main);
+  color: white;
+}
+
+/* Lists */
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--bg-panel);
+  border: 1.5px solid var(--border-color);
+  padding: 15px;
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.list-item:hover {
+  background-color: var(--border-color);
+}
+
+/* Colours */
+.--accent-blue {
+  color: var(--accent-blue);
+}
+
+.--green {
+  color: var(--accent-green);
+}
+
+.--orange {
+  color: var(--accent-orange);
+}
+
+.--blue {
+  color: var(--syntax-blue);
+}
+
+.--pink {
+  color: var(--syntax-pink);
 }
