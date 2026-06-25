@@ -93,18 +93,16 @@ export default function Arena() {
           </div>
         </div>
       ) : (
-        <>
-          <TypingField
-            snippetCode={mockSnippet.codeText}
-            userInput={userInput}
-            inputChange={setUserInput}
-          />
-
-          <div className="card card--hint">
-            <strong>Code Explanation:</strong> {mockSnippet.logicHint}
-          </div>
-        </>
+        <TypingField
+          snippetCode={mockSnippet.codeText}
+          userInput={userInput}
+          inputChange={setUserInput}
+        />
       )}
+
+      <div className="card card--hint">
+        <strong>Code Explanation:</strong> {mockSnippet.logicHint}
+      </div>
     </div>
   )
 }
