@@ -1,17 +1,28 @@
+import { NavLink, Outlet } from 'react-router'
 
-function App() {
-  const { data } = useFruits()
-
+export default function App() {
   return (
     <>
-      <div className="app">
-        <h1 className="text-3xl font-bold underline">
-          Fullstack Boilerplate - with Fruits!
-        </h1>
-        <ul>{data && data.map((fruit) => <li key={fruit}>{fruit}</li>)}</ul>
-      </div>
+      <header>
+        <div className="layout-container navbar">
+          <NavLink to="/" className="nav-logo">
+            {'{'}&quot;Syntax_Sprint&quot;{'}'}
+          </NavLink>
+
+          <nav className="nav-links">
+            <NavLink to="/">Home</NavLink>
+            <NavLink to="/arena">Arena</NavLink>
+            {/* TODO: Logged in: Profile / Not logged in: Login */}
+            <NavLink to="/profile">Profile</NavLink>
+            <NavLink to="/auth">Login</NavLink>
+          </nav>
+        </div>
+      </header>
+
+      <main className="layout-container">
+        <Outlet />
+      </main>
+      <footer></footer>
     </>
   )
 }
-
-export default App
