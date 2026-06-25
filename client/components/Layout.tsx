@@ -4,7 +4,9 @@ export default function Layout() {
   return (
     <>
       <header>
-        <h1>Fullstack Boilerplate - with Fruits!</h1>
+        <h1>
+          {'{'}&quot;Syntax_Sprint&quot;{'}'}
+        </h1>
       </header>
       <main>
         <Outlet />
