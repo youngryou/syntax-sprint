@@ -12,7 +12,9 @@ export default function App() {
           <nav className="nav-links">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/arena">Arena</NavLink>
+            {/* TODO: Logged in: Profile / Not logged in: Login */}
             <NavLink to="/profile">Profile</NavLink>
+            <NavLink to="/auth">Login</NavLink>
           </nav>
         </div>
       </header>

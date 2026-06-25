@@ -46,8 +46,8 @@ export default function TypingField({
       <div className="card card--code">{renderTyping()}</div>
 
       <textarea
-        id="snippet-input"
-        className="input-field"
+        id="snippet-textarea"
+        className="textarea-field"
         placeholder="Type here..."
         value={userInput}
         onChange={(e) => inputChange(e.target.value)}
