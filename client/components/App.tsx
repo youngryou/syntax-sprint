@@ -1,4 +1,3 @@
-import { useFruits } from '../hooks/useFruits.ts'
 
 function App() {
   const { data } = useFruits()
