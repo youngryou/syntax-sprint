@@ -16,6 +16,9 @@
 # Dotenv env settings
 .env
 
+# VS Code workspace settings (can contain SQLTools connection passwords)
+.vscode
+
 # Promptkit repository
 promptkit.
 .claude
