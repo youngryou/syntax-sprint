@@ -1,10 +1,9 @@
 import express from 'express'
 import * as Path from 'node:path'
 import cors, { CorsOptions } from 'cors'
-import { snippetRoutes } from './Routes/snippet'
-import { scoreRoutes } from './Routes/scores'
-import { userRoutes } from './Routes/users'
-
+import snippetRoutes from './Routes/snippet'
+import scoreRoutes from './Routes/scores'
+import userRoutes from './Routes/users'
 
 const server = express()
 
