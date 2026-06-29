@@ -1,11 +1,23 @@
-import express from 'express'
-import * as db from '../../server/db/supabase'
+import * as scoresDb from '../db/scores'
 
 const router = express.Router()
-export default router
+
+// GET /api/v1/scores
+router.get('/', async (req, res) => {
+  try {
+    const leaderboard = await scoresDb.getLeaderboard()
+    res.json(leaderboard)
+  } catch (error: any) {
+    console.error('Failed to fetch leaderboard:', error.message)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
 
 router.post('/', requireAuth, (req,res) => {
   try {
     const 
   }
 })
+
+
+export default router
