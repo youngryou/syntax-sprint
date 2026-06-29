@@ -56,3 +56,12 @@ export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
     .slice(0, 10)
     .map((entry, i) => ({ ...entry, rank: i + 1 }))
 }
+
+export async function addScore(user_id: string, cpm: number, accuracy: number) {
+  const { error } = await supabase
+    .from('scores')
+    .insert({ user_id, cpm, accuracy })
+  if (error) {
+    throw new Error(`Supabase DB Error: ${error.message}`)
+  }
+}
