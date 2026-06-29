@@ -9,6 +9,7 @@ router.get('/', async (req, res) => {
   try {
     const leaderboard = await scoresDb.getLeaderboard()
     res.json(leaderboard)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Failed to fetch leaderboard:', error.message)
     res.status(500).json({ error: 'Internal server error' })
@@ -23,6 +24,7 @@ router.post('/', requireAuth, async (req, res) => {
     const accuracy = req.body.accuracy
     await scoresDb.addScore(id, cpm, accuracy)
     res.status(200).json('Score added to userID successfully.')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Failed to add score:', error.message)
     res.status(500).json({ error: 'Internal server error' })
