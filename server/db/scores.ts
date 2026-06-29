@@ -1,5 +1,27 @@
 import { supabase } from './supabase'
+import { Score } from '../../models/score'
 import { LeaderboardEntry } from '../../models/scores'
+
+const scoreQuery =
+  'scoreId:score_id, userId:user_id, cpm, accuracy, playedAt:played_at'
+
+export async function getScoresByUserId(userId: string): Promise<Score[]> {
+  const { data, error } = await supabase
+    .from('scores')
+    .select(scoreQuery)
+    .eq('user_id', userId)
+    .order('played_at', { ascending: false })
+
+  if (error) {
+    throw new Error(`Supabase DB Error: ${error.message}`)
+  }
+
+  if (!data || data.length === 0) {
+    return []
+  }
+
+  return data as Score[]
+}
 
 export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
   const { data, error } = await supabase
@@ -18,7 +40,7 @@ export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
   const bestPerUser = new Map<string, LeaderboardEntry>()
 
   for (const row of data) {
-    const username = (row.users as unknown as { username: string }).username 
+    const username = (row.users as unknown as { username: string }).username
     if (!bestPerUser.has(username)) {
       bestPerUser.set(username, {
         rank: 0,
