@@ -2,13 +2,13 @@ import { supabase } from './supabase'
 import { User, NewUser } from '../../models/user'
 
 const userData =
-  'userId:id, username, profileImage:profile_image, joinedAt:created_at'
+  'userId:user_id, username, profileImage:profile_image, joinedAt:joined_at'
 
 export async function getUserById(userId: string): Promise<User | null> {
   const { data, error } = await supabase
     .from('users')
     .select(userData)
-    .eq('id', userId)
+    .eq('user_id', userId)
     .single()
 
   if (error) {
@@ -25,7 +25,7 @@ export async function addUser(newUser: NewUser): Promise<User> {
     .from('users')
     .insert([
       {
-        id: newUser.id,
+        user_id: newUser.id,
         username: newUser.username,
         profile_image: newUser.profileImage,
       },
