@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import TypingField from '../components/TypingField.tsx'
-import { getRandomSnippet } from '../utils/apiClient.ts'
+import { getRandomSnippet, postScore } from '../utils/apiClient.ts'
 import { Snippet } from '../../models/snippet.ts'
+import { supabase } from '../utils/supabase.ts'
 
 export default function Arena() {
   const location = useLocation()
@@ -13,6 +14,7 @@ export default function Arena() {
   const [gameState, setGameState] = useState(
     location.state?.autoStart ? 'playing' : 'ready',
   )
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [timer, setTimer] = useState(0)
 
   const [snippet, setSnippet] = useState<Snippet | null>(null)
@@ -64,10 +66,15 @@ export default function Arena() {
 
   useEffect(() => {
     if (gameState === 'playing' && snippet && userInput === snippet.codeText) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setGameState('finished')
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          setIsLoggedIn(true)
+          postScore(liveCpm, liveAccuracy)
+        }
+      })
     }
-  }, [userInput, gameState, snippet])
+  }, [userInput, gameState, snippet, liveCpm, liveAccuracy])
 
   const timerFormat = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -141,6 +148,11 @@ export default function Arena() {
         <div className="card text--center">
           <h2 className="page-title --green">Match Finished!</h2>
           <p className="card-subtitle">Your Time: {timerFormat(timer)}</p>
+          {!isLoggedIn && (
+            <p className="text-muted">
+              <a href="/auth" className="--green">Login</a> to save your score next time.
+            </p>
+          )}
           <div className="card-actions">
             <button className="btn btn--dark" onClick={() => navigate('/')}>
               BACK TO DASHBOARD
