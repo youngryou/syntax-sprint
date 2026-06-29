@@ -1,27 +1,42 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import TypingField from '../components/TypingField.tsx'
+import { getRandomSnippet } from '../utils/apiClient.ts'
+import { Snippet } from '../../models/snippet.ts'
 
 export default function Arena() {
   const location = useLocation()
   const navigate = useNavigate()
   const [userInput, setUserInput] = useState('')
+  const [totalTyped, setTotalTyped] = useState(0)
+
   const [gameState, setGameState] = useState(
     location.state?.autoStart ? 'playing' : 'ready',
   )
   const [timer, setTimer] = useState(0)
 
-  const mockSnippet = {
-    id: 1,
-    language: 'javascript',
-    codeText: 'const sum = (a, b) => {\n  return a + b;\n};',
-    logicHint: 'Arrow function that returns the sum of two parameters.',
-  }
+  const [snippet, setSnippet] = useState<Snippet | null>(null)
+  const [loading, setLoading] = useState(true)
 
-  const mockStats = {
-    cpm: 80,
-    accuracy: 100,
-  }
+  // const mockStats = {
+  //   cpm: 80,
+  //   accuracy: 100,
+  // }
+
+  const correctCharsCount = snippet
+    ? userInput
+        .split('')
+        .filter((char, index) => char === snippet.codeText[index]).length
+    : 0
+
+  const progressPercent = snippet
+    ? Math.min((correctCharsCount / snippet.codeText.length) * 100, 100)
+    : 0
+
+  const liveAccuracy =
+    totalTyped > 0 ? Math.round((correctCharsCount / totalTyped) * 100) : 100
+
+  const liveCpm = timer > 0 ? Math.round(correctCharsCount / (timer / 60)) : 0
 
   useEffect(() => {
     if (gameState === 'playing') {
@@ -34,11 +49,25 @@ export default function Arena() {
   }, [gameState])
 
   useEffect(() => {
-    if (gameState === 'playing' && userInput === mockSnippet.codeText) {
+    async function fetchSnippet() {
+      try {
+        const data = await getRandomSnippet()
+        setSnippet(data)
+      } catch (error) {
+        console.error('Error fetching snippet:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchSnippet()
+  }, [])
+
+  useEffect(() => {
+    if (gameState === 'playing' && snippet && userInput === snippet.codeText) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setGameState('finished')
     }
-  }, [userInput, gameState, mockSnippet.codeText])
+  }, [userInput, gameState, snippet])
 
   const timerFormat = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -49,7 +78,25 @@ export default function Arena() {
   const handleStartGame = () => {
     setGameState('playing')
     setUserInput('')
+    setTotalTyped(0)
     setTimer(0)
+  }
+
+  const handleTyping = (newInput: string) => {
+    if (newInput.length > userInput.length) {
+      setTotalTyped((prev) => prev + (newInput.length - userInput.length))
+    }
+    setUserInput(newInput)
+  }
+
+  if (loading) {
+    return <div className="page-section text--center">Loading Arena...</div>
+  }
+
+  if (!snippet) {
+    return (
+      <div className="page-section text--center">Failed to load snippet.</div>
+    )
   }
 
   return (
@@ -57,17 +104,28 @@ export default function Arena() {
       <div className="card card--flex">
         <div className="text--center">
           <div className="card-subtitle">CPM</div>
-          <div className="card-title --green">{mockStats.cpm}</div>
+          <div className="card-title --green">{liveCpm}</div>
         </div>
         <div className="text--center">
           <div className="card-subtitle">ACCURACY</div>
-          <div className="card-title --blue">{mockStats.accuracy}%</div>
+          <div className="card-title --blue">{liveAccuracy}%</div>
         </div>
         <div className="text--center">
           <div className="card-subtitle">TIME</div>
           <div className="card-title --orange">{timerFormat(timer)}</div>
         </div>
       </div>
+
+      {gameState === 'playing' && (
+        <div className="progress-container">
+          <div
+            className="progress-bar"
+            style={{
+              width: `${progressPercent}%`,
+            }}
+          />
+        </div>
+      )}
 
       {gameState === 'ready' ? (
         <div className="page-section card text--center">
@@ -94,14 +152,22 @@ export default function Arena() {
         </div>
       ) : (
         <TypingField
-          snippetCode={mockSnippet.codeText}
+          snippetCode={snippet.codeText}
           userInput={userInput}
-          inputChange={setUserInput}
+          inputChange={handleTyping}
         />
       )}
 
       <div className="card card--hint">
-        <strong>Code Explanation:</strong> {mockSnippet.logicHint}
+        <p>
+          <strong>Language:</strong> {snippet.language.toUpperCase()}
+        </p>
+        <p>
+          <strong>Explanation:</strong> {snippet.logicHint}
+        </p>
+        <p>
+          <strong>Difficulty:</strong> {snippet.difficulty.toUpperCase()}
+        </p>
       </div>
     </div>
   )
