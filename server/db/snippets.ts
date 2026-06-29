@@ -1,11 +1,11 @@
 import { supabase } from './supabase'
 import { Snippet } from '../../models/snippet'
 
-const snippetData =
+const snippetQuery =
   'snippetId:snippet_id, language, codeText:code_text, logicHint:logic_hint, difficulty'
 
 export async function getRandomSnippet(): Promise<Snippet | null> {
-  const { data, error } = await supabase.from('snippets').select(snippetData)
+  const { data, error } = await supabase.from('snippets').select(snippetQuery)
 
   if (error) {
     throw new Error(`Supabase DB Error: ${error.message}`)
