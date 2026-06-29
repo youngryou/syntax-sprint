@@ -15,11 +15,18 @@ router.get('/', async (req, res) => {
   }
 })
 
-router.post('/', requireAuth, (req,res) => {
+// POST /api/v1/scores
+router.post('/', requireAuth, async (req, res) => {
   try {
-    const 
+    const id = req.user!.id
+    const cpm = req.body.cpm
+    const accuracy = req.body.accuracy
+    await scoresDb.addScore(id, cpm, accuracy)
+    res.status(200).json('Score added to userID successfully.')
+  } catch (error: any) {
+    console.error('Failed to add score:', error.message)
+    res.status(500).json({ error: 'Internal server error' })
   }
 })
-
 
 export default router
