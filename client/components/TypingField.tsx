@@ -35,9 +35,28 @@ export default function TypingField({
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    const currentIndex = userInput.length
+
     if (e.key === 'Tab') {
       e.preventDefault()
       inputChange(userInput + '  ')
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault()
+
+      if (snippetCode[currentIndex] === '\n') {
+        let indent = ''
+        let nextIndex = currentIndex + 1
+
+        while (snippetCode[nextIndex] === ' ') {
+          indent += ' '
+          nextIndex++
+        }
+        inputChange(userInput + '\n' + indent)
+      } else {
+        inputChange(userInput + '\n')
+      }
     }
   }
 
@@ -53,6 +72,9 @@ export default function TypingField({
         onChange={(e) => inputChange(e.target.value)}
         onKeyDown={handleKeyDown}
         spellCheck={false}
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
         // eslint-disable-next-line jsx-a11y/no-autofocus
         autoFocus
       />
