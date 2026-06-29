@@ -8,6 +8,8 @@ export default function Arena() {
   const location = useLocation()
   const navigate = useNavigate()
   const [userInput, setUserInput] = useState('')
+  const [totalTyped, setTotalTyped] = useState(0)
+
   const [gameState, setGameState] = useState(
     location.state?.autoStart ? 'playing' : 'ready',
   )
@@ -16,10 +18,10 @@ export default function Arena() {
   const [snippet, setSnippet] = useState<Snippet | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const mockStats = {
-    cpm: 80,
-    accuracy: 100,
-  }
+  // const mockStats = {
+  //   cpm: 80,
+  //   accuracy: 100,
+  // }
 
   const correctCharsCount = snippet
     ? userInput
@@ -30,6 +32,11 @@ export default function Arena() {
   const progressPercent = snippet
     ? Math.min((correctCharsCount / snippet.codeText.length) * 100, 100)
     : 0
+
+  const liveAccuracy =
+    totalTyped > 0 ? Math.round((correctCharsCount / totalTyped) * 100) : 100
+
+  const liveCpm = timer > 0 ? Math.round(correctCharsCount / (timer / 60)) : 0
 
   useEffect(() => {
     if (gameState === 'playing') {
@@ -71,7 +78,15 @@ export default function Arena() {
   const handleStartGame = () => {
     setGameState('playing')
     setUserInput('')
+    setTotalTyped(0)
     setTimer(0)
+  }
+
+  const handleTyping = (newInput: string) => {
+    if (newInput.length > userInput.length) {
+      setTotalTyped((prev) => prev + (newInput.length - userInput.length))
+    }
+    setUserInput(newInput)
   }
 
   if (loading) {
@@ -89,11 +104,11 @@ export default function Arena() {
       <div className="card card--flex">
         <div className="text--center">
           <div className="card-subtitle">CPM</div>
-          <div className="card-title --green">{mockStats.cpm}</div>
+          <div className="card-title --green">{liveCpm}</div>
         </div>
         <div className="text--center">
           <div className="card-subtitle">ACCURACY</div>
-          <div className="card-title --blue">{mockStats.accuracy}%</div>
+          <div className="card-title --blue">{liveAccuracy}%</div>
         </div>
         <div className="text--center">
           <div className="card-subtitle">TIME</div>
@@ -139,7 +154,7 @@ export default function Arena() {
         <TypingField
           snippetCode={snippet.codeText}
           userInput={userInput}
-          inputChange={setUserInput}
+          inputChange={handleTyping}
         />
       )}
 
