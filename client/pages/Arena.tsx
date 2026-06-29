@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import TypingField from '../components/TypingField.tsx'
+import { getRandomSnippet } from '../utils/apiClient.ts'
+import { Snippet } from '../../models/snippet.ts'
 
 export default function Arena() {
   const location = useLocation()
@@ -11,12 +13,8 @@ export default function Arena() {
   )
   const [timer, setTimer] = useState(0)
 
-  const mockSnippet = {
-    id: 1,
-    language: 'javascript',
-    codeText: 'const sum = (a, b) => {\n  return a + b;\n};',
-    logicHint: 'Arrow function that returns the sum of two parameters.',
-  }
+  const [snippet, setSnippet] = useState<Snippet | null>(null)
+  const [loading, setLoading] = useState(true)
 
   const mockStats = {
     cpm: 80,
@@ -34,11 +32,25 @@ export default function Arena() {
   }, [gameState])
 
   useEffect(() => {
-    if (gameState === 'playing' && userInput === mockSnippet.codeText) {
+    async function fetchSnippet() {
+      try {
+        const data = await getRandomSnippet()
+        setSnippet(data)
+      } catch (error) {
+        console.error('Error fetching snippet:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchSnippet()
+  }, [])
+
+  useEffect(() => {
+    if (gameState === 'playing' && snippet && userInput === snippet.codeText) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setGameState('finished')
     }
-  }, [userInput, gameState, mockSnippet.codeText])
+  }, [userInput, gameState, snippet])
 
   const timerFormat = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -50,6 +62,16 @@ export default function Arena() {
     setGameState('playing')
     setUserInput('')
     setTimer(0)
+  }
+
+  if (loading) {
+    return <div className="page-section text--center">Loading Arena...</div>
+  }
+
+  if (!snippet) {
+    return (
+      <div className="page-section text--center">Failed to load snippet.</div>
+    )
   }
 
   return (
@@ -94,14 +116,22 @@ export default function Arena() {
         </div>
       ) : (
         <TypingField
-          snippetCode={mockSnippet.codeText}
+          snippetCode={snippet.codeText}
           userInput={userInput}
           inputChange={setUserInput}
         />
       )}
 
       <div className="card card--hint">
-        <strong>Code Explanation:</strong> {mockSnippet.logicHint}
+        <p>
+          <strong>Language:</strong> {snippet.language.toUpperCase()}
+        </p>
+        <p>
+          <strong>Explanation:</strong> {snippet.logicHint}
+        </p>
+        <p>
+          <strong>Difficulty:</strong> {snippet.difficulty.toUpperCase()}
+        </p>
       </div>
     </div>
   )
