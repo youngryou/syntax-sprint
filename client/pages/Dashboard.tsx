@@ -1,14 +1,25 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { getLeaderboard } from '../utils/apiClient'
+import { LeaderboardEntry } from '../../models/scores'
 
 export default function Dashboard() {
   const navigate = useNavigate()
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([])
+  const [error, setError] = useState('')
 
-  const mockLeaderboard = [
-    { id: 1, rank: 1, username: 'fast_coder', cpm: 120, accuracy: 99 },
-    { id: 2, rank: 2, username: 'code_warrior', cpm: 105, accuracy: 98 },
-    { id: 3, rank: 3, username: 'dev_student (You)', cpm: 95, accuracy: 98 },
-    { id: 4, rank: 4, username: 'react_master', cpm: 88, accuracy: 90 },
-  ]
+  useEffect(() => {
+    async function loadLeaderboard() {
+      try {
+        const data = await getLeaderboard()
+        setLeaderboard(data.slice(0, 10))
+      } catch {
+        setError('Could not load leaderboard.')
+      }
+    }
+
+    loadLeaderboard()
+  }, [])
 
   return (
     <div className="page-grid">
@@ -22,14 +33,7 @@ export default function Dashboard() {
             className="btn btn--dark"
             onClick={() => navigate('/arena', { state: { autoStart: true } })}
           >
-            <span className="--green">{'>'}_</span> OFFLINE PRACTICE MODE
-          </button>
-
-          <button
-            className="btn btn--blue"
-            onClick={() => navigate('/arena', { state: { autoStart: true } })}
-          >
-            ⚡ REAL-TIME BATTLE (MATCHMAKING)
+            <span className="--green">{'>'}_</span> START GAME
           </button>
         </div>
       </div>
@@ -37,12 +41,17 @@ export default function Dashboard() {
       <div className="page-section">
         <h3 className="page-subtitle">TOP PLAYERS</h3>
 
+        {error && <p className="text-muted">{error}</p>}
+
         <div className="list-container">
-          {mockLeaderboard.map((player) => (
-            <div key={player.id} className="list-item">
+          {leaderboard.map((player) => (
+            <div
+              key={`${player.username}-${player.rank}`}
+              className="list-item"
+            >
               <strong className="--green">#{player.rank}</strong>
               <span>{player.username}</span>
-              <span className="--orange">{player.cpm} CPM</span>
+              <span className="--orange">{player.bestCpm} CPM</span>
             </div>
           ))}
         </div>
