@@ -11,15 +11,6 @@ export default function TypingField({
   userInput,
   inputChange,
 }: Props) {
-  const correctCharsCount = userInput
-    .split('')
-    .filter((char, index) => char === snippetCode[index]).length
-
-  const progressPercent = Math.min(
-    (correctCharsCount / snippetCode.length) * 100,
-    100,
-  )
-
   const renderTyping = () => {
     return snippetCode.split('').map((char, index) => {
       const charStatus =
@@ -52,15 +43,6 @@ export default function TypingField({
 
   return (
     <div className="page-section">
-      <div className="progress-container">
-        <div
-          className="progress-bar"
-          style={{
-            width: `${progressPercent}%`,
-          }}
-        />
-      </div>
-
       <div className="card card--code">{renderTyping()}</div>
 
       <textarea

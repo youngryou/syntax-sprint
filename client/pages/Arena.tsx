@@ -21,6 +21,16 @@ export default function Arena() {
     accuracy: 100,
   }
 
+  const correctCharsCount = snippet
+    ? userInput
+        .split('')
+        .filter((char, index) => char === snippet.codeText[index]).length
+    : 0
+
+  const progressPercent = snippet
+    ? Math.min((correctCharsCount / snippet.codeText.length) * 100, 100)
+    : 0
+
   useEffect(() => {
     if (gameState === 'playing') {
       const timerId = setInterval(() => {
@@ -90,6 +100,17 @@ export default function Arena() {
           <div className="card-title --orange">{timerFormat(timer)}</div>
         </div>
       </div>
+
+      {gameState === 'playing' && (
+        <div className="progress-container">
+          <div
+            className="progress-bar"
+            style={{
+              width: `${progressPercent}%`,
+            }}
+          />
+        </div>
+      )}
 
       {gameState === 'ready' ? (
         <div className="page-section card text--center">
