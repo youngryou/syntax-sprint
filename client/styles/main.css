@@ -118,16 +118,25 @@ header {
   gap: 20px;
 }
 
-.nav-links a {
+.nav-links a,
+.nav-links button {
   color: var(--text-main);
   text-decoration: none;
   font-size: 1rem;
   border-bottom: 2px solid transparent;
   padding-bottom: 4px;
   transition: all 0.2s ease-in-out;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  padding-inline: 0;
+  font-family: inherit;
+  cursor: pointer;
 }
 
-.nav-links a:hover {
+.nav-links a:hover,
+.nav-links button:hover {
   border-bottom-color: var(--accent-blue);
   transform: translateY(-2px);
 }
@@ -343,6 +352,21 @@ header {
 .textarea-field::-webkit-scrollbar-thumb {
   background-color: var(--border-color);
   border-radius: 8px;
+}
+
+/* Progress Bar */
+.progress-container {
+  width: 100%;
+  background-color: var(--border-color);
+  height: 8px;
+  border-radius: 999px;
+}
+
+.progress-bar {
+  background-color: var(--accent-green);
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.1s ease-out;
 }
 
 /* Profile Components */
