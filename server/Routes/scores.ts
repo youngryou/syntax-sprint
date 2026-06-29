@@ -8,6 +8,7 @@ router.get('/', async (req, res) => {
   try {
     const leaderboard = await scoresDb.getLeaderboard()
     res.json(leaderboard)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Failed to fetch leaderboard:', error.message)
     res.status(500).json({ error: 'Internal server error' })

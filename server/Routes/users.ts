@@ -1,11 +1,7 @@
 import express from 'express'
-<<<<<<< HEAD
-import * as userDb from '../db/users.js'
 import { requireAuth } from '../middleware/auth'
-=======
 import * as userDb from '../db/users'
 import * as scoreDb from '../db/scores'
->>>>>>> main
 
 const router = express.Router()
 
