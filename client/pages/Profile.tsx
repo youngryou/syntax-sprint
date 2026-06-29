@@ -1,4 +1,14 @@
+import { useNavigate } from 'react-router'
+import { supabase } from '../utils/supabase'
+
 export default function Profile() {
+  const navigate = useNavigate()
+
+  async function handleLogout() {
+    await supabase.auth.signOut()
+    navigate('/auth')
+  }
+
   const mockUser = {
     id: 1,
     username: 'dev_student',
@@ -63,7 +73,9 @@ export default function Profile() {
           </div>
         </div>
 
-        <button className="btn btn--outline">LOG OUT</button>
+        <button className="btn btn--outline" onClick={handleLogout}>
+          LOG OUT
+        </button>
       </div>
 
       <div className="page-section">
