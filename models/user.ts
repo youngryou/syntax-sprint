@@ -7,3 +7,8 @@ export interface User extends UserData {
   userId: string
   joinedAt: string
 }
+export interface NewUser {
+  id: string
+  username: string
+  profileImage?: string | null
+}
