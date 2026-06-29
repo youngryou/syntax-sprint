@@ -83,3 +83,12 @@ export async function getUserBestStats(userId: string): Promise<StatData> {
 
   return { bestCpm, averageAccuracy } as StatData
 }
+
+export async function addScore(user_id: string, cpm: number, accuracy: number) {
+  const { error } = await supabase
+    .from('scores')
+    .insert({ user_id, cpm, accuracy })
+  if (error) {
+    throw new Error(`Supabase DB Error: ${error.message}`)
+  }
+}
