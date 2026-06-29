@@ -1,4 +1,6 @@
 import * as scoresDb from '../db/scores'
+import express from 'express'
+import { requireAuth } from '../middleware/auth'
 
 const router = express.Router()
 
