@@ -32,11 +32,11 @@ insert into public.scores (user_id, cpm, accuracy, played_at) values
 insert into public.snippets (language, code_text, logic_hint, difficulty) values
   ('javascript', 'const x = arr.filter(n => n % 2 === 0)', 'Filter even numbers from an array', 'easy'),
   ('javascript', 'const sum = arr.reduce((acc, curr) => acc + curr, 0)', 'Calculate the total sum of all numbers in an array', 'easy'),
-  ('javascript', 'function flatten(arr) { return arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []); }', 'Recursively flatten a deeply nested array into a single level', 'medium'),
-  ('javascript', 'const curry = (fn) => { const curried = (...args) => args.length >= fn.length ? fn(...args) : (...nextArgs) => curried(...args, ...nextArgs); return curried; }', 'Convert a function that takes multiple arguments into a sequence of nesting functions', 'hard'),
+  ('javascript', E'function flatten(arr) {\n  return arr.reduce((acc, val) =>\n    acc.concat(Array.isArray(val) ? flatten(val) : val),\n  []);\n}', 'Recursively flatten a deeply nested array into a single level', 'medium'),
+  ('javascript', E'const curry = (fn) => {\n  const curried = (...args) =>\n    args.length >= fn.length\n      ? fn(...args)\n      : (...nextArgs) => curried(...args, ...nextArgs);\n  return curried;\n}', 'Convert a function that takes multiple arguments into a sequence of nesting functions', 'hard'),
   ('python', 'evens = [n for n in numbers if n % 2 == 0]', 'Use list comprehension to filter out even numbers from a list', 'easy'),
   ('python', 'inverted = {v: k for k, v in original_dict.items()}', 'Swap keys and values in a dictionary assuming all values are unique', 'easy'),
   ('python', 'is_anagram = lambda s1, s2: sorted(s1) == sorted(s2)', 'Check if two strings are anagrams by comparing their sorted character representations', 'medium'),
   ('python', E'while low <= high:\n    mid = (low + high) // 2\n    if arr[mid] == target:\n        return mid\n    elif arr[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1', 'Implement standard iterative binary search on a sorted array', 'medium'),
-  ('typescript', 'function isString(val: unknown): val is string { return typeof val === "string"; }', 'Define a custom type guard to narrow down an unknown type to a string safely', 'medium'),
-  ('typescript', 'type DeepReadonly<T> = { readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P] };', 'Create a utility type that makes all properties of an object deeply immutable', 'hard');
+  ('typescript', E'function isString(val: unknown): val is string {\n  return typeof val === "string";\n}', 'Define a custom type guard to narrow down an unknown type to a string safely', 'medium'),
+  ('typescript', E'type DeepReadonly<T> = {\n  readonly [P in keyof T]: T[P] extends object\n    ? DeepReadonly<T[P]>\n    : T[P]\n};', 'Create a utility type that makes all properties of an object deeply immutable', 'hard');
