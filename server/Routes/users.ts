@@ -1,6 +1,11 @@
 import express from 'express'
+<<<<<<< HEAD
 import * as userDb from '../db/users.js'
 import { requireAuth } from '../middleware/auth'
+=======
+import * as userDb from '../db/users'
+import * as scoreDb from '../db/scores'
+>>>>>>> main
 
 const router = express.Router()
 
@@ -69,6 +74,19 @@ router.get('/:id', async (req, res) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.error('Failed to fetch public profile:', error.message)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+router.get('/:id/scores', async (req, res) => {
+  try {
+    const userId = req.params.id
+    const scores = await scoreDb.getScoresByUserId(userId)
+
+    res.json(scores)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.error('Failed to fetch user scores:', error.message)
     res.status(500).json({ error: 'Internal server error' })
   }
 })
