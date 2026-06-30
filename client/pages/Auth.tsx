@@ -124,9 +124,12 @@ export default function Auth() {
           <button className="btn btn--blue" onClick={handleLogin}>
             LOGIN
           </button>
-          <button className="btn btn--outline" onClick={handleSignUp}>
+          <a
+            className="text-link text--right"
+            onClick={() => navigate('/register')}
+          >
             CREATE ACCOUNT
-          </button>
+          </a>
         </div>
       </div>
     </div>

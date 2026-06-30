@@ -59,6 +59,19 @@ header {
   font-size: 1rem;
 }
 
+.text-link {
+  color: var(--syntax-blue);
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+  transform: translateY(-2px);
+}
+
 .text-muted {
   color: var(--text-muted);
 }
@@ -384,6 +397,24 @@ header {
   height: auto;
   border-radius: 999px;
   object-fit: cover;
+}
+
+/* Auth */
+.password-rules {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 1rem;
+  font-size: 0.85rem;
+}
+
+.rule--valid {
+  color: var(--accent-green);
+  transition: color 0.3s ease;
+}
+
+.rule--invalid {
+  color: var(--accent-orange);
+  transition: color 0.3s ease;
 }
 
 /* Colours */
