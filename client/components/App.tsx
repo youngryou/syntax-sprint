@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useNavigate } from 'react-router'
 import { supabase } from '../utils/supabase'
-import { getUserById } from '../utils/apiClient'
+import { getUserById, registerUser } from '../utils/apiClient'
 
 export default function App() {
   const navigate = useNavigate()
@@ -16,9 +16,16 @@ export default function App() {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session) {
-        getUserById(session.user.id).then((user) => setUsername(user.username))
+        const user = await getUserById(session.user.id)
+        if (user.username) {
+          setUsername(user.username)
+        } else if (event === 'SIGNED_IN') {
+          const meta = session.user.user_metadata
+          await registerUser(meta.username, meta.profileImage)
+          setUsername(meta.username)
+        }
       } else {
         setUsername(null)
       }
