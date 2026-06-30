@@ -1,46 +1,101 @@
 import { useNavigate } from 'react-router'
 import { supabase } from '../utils/supabase'
+import { useState, useEffect } from 'react'
+import { getUserById, getUserStats, getUserScores } from '../utils/apiClient'
+
+interface UserData {
+  profile_image: string
+  username: string
+  joined_at: string
+}
+
+interface StatsData {
+  best_cpm: number
+  average_accuracy: number
+}
+interface ScoreRecord {
+  id: number
+  title?: string
+  mode?: string
+  date: string
+  cpm: number
+  accuracy: number
+
+  playedAt?: string
+  status?: 'win' | 'loss' | string
+}
 
 export default function Profile() {
   const navigate = useNavigate()
+
+  const [user, setUser] = useState<UserData | null>(null)
+  const [stats, setStats] = useState<StatsData | null>(null)
+  const [records, setRecords] = useState<ScoreRecord[]>([])
+
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function getProfileAndData() {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+
+        if (!session?.user?.id) {
+          navigate('/auth')
+          return
+        }
+
+        const userId = session.user.id
+
+        const [userData, statsData, scoresData] = await Promise.all([
+          getUserById(userId),
+          getUserStats(userId),
+          getUserScores(userId),
+        ])
+
+        setUser(userData as unknown as UserData)
+        setStats(statsData as unknown as StatsData)
+        setRecords(scoresData as unknown as ScoreRecord[])
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : String(err)
+        setError(message || 'unexpected error occured.')
+      } finally {
+        setLoading(false)
+      }
+    }
+    getProfileAndData()
+  }, [navigate])
 
   async function handleLogout() {
     await supabase.auth.signOut()
     navigate('/auth')
   }
 
-  const mockUser = {
-    id: 1,
-    username: 'dev_student',
-    profileImage:
-      'https://ui-avatars.com/api/?name=dev_student&background=0e639c&color=d4d4d4&bold=true',
-    joinedAt: 'Jun 2026',
+  if (loading) {
+    return (
+      <div className="page-grid text--center" style={{ padding: '2rem' }}>
+        Loading profile...
+      </div>
+    )
   }
-
-  const mockStats = {
-    bestCpm: 88,
-    avgAccuracy: 78,
+  if (error) {
+    return (
+      <div className="page-grid text--center" style={{ padding: '2rem' }}>
+        <p className="text--orange">Error: {error}</p>
+        <button
+          className="btn btn--outline"
+          onClick={() => window.location.reload()}
+        >
+          Retry
+        </button>
+      </div>
+    )
   }
-
-  const mockRecords = [
-    {
-      id: 1,
-      title: 'Arrow Functions',
-      mode: 'Offline Practice',
-      playedAt: 'Today',
-      cpm: '95 CPM',
-      status: 'win',
-    },
-    {
-      id: 2,
-      title: 'Array Map',
-      competitor: 'fast_coder',
-      mode: 'Real-time Battle',
-      playedAt: 'Yesterday',
-      cpm: '82 CPM',
-      status: 'loss',
-    },
-  ]
 
   return (
     <div className="page-grid">
@@ -48,16 +103,26 @@ export default function Profile() {
         <div className="profile-header">
           <div>
             <img
-              src={mockUser.profileImage}
+              src={
+                user?.profile_image || 'https://ui-avatars.com/api/?name=User'
+              }
               alt="Profile avatar"
               className="profile-image"
             />
           </div>
 
           <div>
-            <h2 className="page-subtitle">{mockUser.username}</h2>
+            <h2 className="page-subtitle">
+              {user?.username || 'Unknown User'}
+            </h2>
             <div className="card-subtitle text-muted">
-              Joined {mockUser.joinedAt}
+              Joined{' '}
+              {user?.joined_at
+                ? new Date(user.joined_at).toLocaleDateString(undefined, {
+                    month: 'short',
+                    year: 'numeric',
+                  })
+                : ''}
             </div>
           </div>
         </div>
@@ -65,11 +130,11 @@ export default function Profile() {
         <div className="card card--flex">
           <div className="text--center">
             <div className="card-subtitle">BEST CPM</div>
-            <div className="card-title --green">{mockStats.bestCpm}</div>
+            <div className="card-title --green">{stats?.best_cpm}</div>
           </div>
           <div className="text--center">
             <div className="card-subtitle">AVG ACCURACY</div>
-            <div className="card-title --blue">{mockStats.avgAccuracy}%</div>
+            <div className="card-title --blue">{stats?.average_accuracy}%</div>
           </div>
         </div>
 
@@ -80,21 +145,27 @@ export default function Profile() {
 
       <div className="page-section">
         <h3 className="page-subtitle">Records</h3>
-        {mockRecords.map((record) => (
-          <div key={record.id} className="list-item">
-            <div className="list-item--col">
-              <span>{record.title}</span>
-              <span className="text-muted">
-                {record.mode} - {record.playedAt}
-              </span>
-            </div>
-            <div className={record.status === 'win' ? '--green' : '--orange'}>
-              <strong>
-                {record.status === 'win' ? record.cpm : `Loss ${record.cpm}`}
-              </strong>
-            </div>
+        {records.length === 0 ? (
+          <div className="text-muted" style={{ padding: '1rem 0' }}>
+            <p>no record of games. play your first game.</p>
           </div>
-        ))}
+        ) : (
+          records.map((record) => (
+            <div key={record.id} className="list-item">
+              <div className="list-item--col">
+                <span>{record.title}</span>
+                <span className="text-muted">
+                  {record.mode} - {record.playedAt}
+                </span>
+              </div>
+              <div className={record.status === 'win' ? '--green' : '--orange'}>
+                <strong>
+                  {record.status === 'win' ? record.cpm : `Loss ${record.cpm}`}
+                </strong>
+              </div>
+            </div>
+          ))
+        )}
       </div>
     </div>
   )
