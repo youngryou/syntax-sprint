@@ -18,6 +18,7 @@ router.post('/', requireAuth, async (req, res) => {
 
   try {
     const existingUser = await userDb.getUserById(userId)
+
     if (existingUser) {
       return res.status(200).json({
         message: 'User already exists',
