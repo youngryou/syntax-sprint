@@ -31,6 +31,12 @@ export default function Register() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        data: {
+          username,
+          profileImage: `https://ui-avatars.com/api/?name=${username}&background=0e639c&color=d4d4d4&bold=true`,
+        },
+      },
     })
 
     if (error) {
