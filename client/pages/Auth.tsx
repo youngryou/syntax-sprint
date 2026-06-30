@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { supabase } from '../utils/supabase'
+import { registerUser } from '../utils/apiClient'
 
 export default function Auth() {
   const navigate = useNavigate()
@@ -20,6 +21,19 @@ export default function Auth() {
     if (error) {
       setMessage(error.message)
       return
+    }
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    const meta = user?.user_metadata
+    try {
+      await registerUser(
+        meta?.username || email.split('@')[0],
+        meta?.avatarUrl || null,
+      )
+    } catch {
+      // profile creation failure should not block login
     }
 
     navigate('/profile')
