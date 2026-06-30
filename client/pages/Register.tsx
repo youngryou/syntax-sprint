@@ -28,9 +28,12 @@ export default function Register() {
       return
     }
 
+    const avatarUrl = `https://ui-avatars.com/api/?name=${username}&background=0e639c&color=d4d4d4&bold=true`
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: { data: { username, avatarUrl } },
     })
 
     if (error) {
@@ -44,8 +47,6 @@ export default function Register() {
     }
 
     try {
-      const avatarUrl = `https://ui-avatars.com/api/?name=${username}&background=0e639c&color=d4d4d4&bold=true`
-
       await registerUser(username, avatarUrl)
       navigate('/profile')
     } catch (err) {
