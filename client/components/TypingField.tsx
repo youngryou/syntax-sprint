@@ -71,6 +71,7 @@ export default function TypingField({
         value={userInput}
         onChange={(e) => inputChange(e.target.value)}
         onKeyDown={handleKeyDown}
+        onPaste={(e) => e.preventDefault()}
         spellCheck={false}
         autoComplete="off"
         autoCorrect="off"
