@@ -30,7 +30,7 @@ export default function Auth() {
     try {
       await registerUser(
         meta?.username || email.split('@')[0],
-        meta?.avatarUrl || null,
+        meta?.profileImage || null,
       )
     } catch {
       // profile creation failure should not block login
