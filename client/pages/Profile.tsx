@@ -2,35 +2,16 @@ import { useNavigate } from 'react-router'
 import { supabase } from '../utils/supabase'
 import { useState, useEffect } from 'react'
 import { getUserById, getUserStats, getUserScores } from '../utils/apiClient'
-
-interface UserData {
-  profile_image: string
-  username: string
-  joined_at: string
-}
-
-interface StatsData {
-  best_cpm: number
-  average_accuracy: number
-}
-interface ScoreRecord {
-  id: number
-  title?: string
-  mode?: string
-  date: string
-  cpm: number
-  accuracy: number
-
-  playedAt?: string
-  status?: 'win' | 'loss' | string
-}
+import { User } from '../../models/user'
+import { Stat } from '../../models/stat'
+import { Score } from '../../models/score'
 
 export default function Profile() {
   const navigate = useNavigate()
 
-  const [user, setUser] = useState<UserData | null>(null)
-  const [stats, setStats] = useState<StatsData | null>(null)
-  const [records, setRecords] = useState<ScoreRecord[]>([])
+  const [user, setUser] = useState<User | null>(null)
+  const [stats, setStats] = useState<Stat | null>(null)
+  const [records, setRecords] = useState<Score[]>([])
 
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
@@ -58,9 +39,9 @@ export default function Profile() {
           getUserScores(userId),
         ])
 
-        setUser(userData as unknown as UserData)
-        setStats(statsData as unknown as StatsData)
-        setRecords(scoresData as unknown as ScoreRecord[])
+        setUser(userData)
+        setStats(statsData)
+        setRecords(scoresData)
       } catch (err: unknown) {
         const message = err instanceof Error ? err.message : String(err)
         setError(message || 'unexpected error occured.')
@@ -104,7 +85,8 @@ export default function Profile() {
           <div>
             <img
               src={
-                user?.profile_image || 'https://ui-avatars.com/api/?name=User'
+                user?.profileImage ||
+                `https://ui-avatars.com/api/?name=${user?.username || 'User'}&background=0e639c&color=d4d4d4&bold=true`
               }
               alt="Profile avatar"
               className="profile-image"
@@ -117,8 +99,8 @@ export default function Profile() {
             </h2>
             <div className="card-subtitle text-muted">
               Joined{' '}
-              {user?.joined_at
-                ? new Date(user.joined_at).toLocaleDateString(undefined, {
+              {user?.joinedAt
+                ? new Date(user.joinedAt).toLocaleDateString('en-NZ', {
                     month: 'short',
                     year: 'numeric',
                   })
@@ -130,11 +112,13 @@ export default function Profile() {
         <div className="card card--flex">
           <div className="text--center">
             <div className="card-subtitle">BEST CPM</div>
-            <div className="card-title --green">{stats?.best_cpm}</div>
+            <div className="card-title --green">{stats?.bestCpm || 0}</div>
           </div>
           <div className="text--center">
             <div className="card-subtitle">AVG ACCURACY</div>
-            <div className="card-title --blue">{stats?.average_accuracy}%</div>
+            <div className="card-title --blue">
+              {stats?.averageAccuracy || 0}%
+            </div>
           </div>
         </div>
 
@@ -151,18 +135,22 @@ export default function Profile() {
           </div>
         ) : (
           records.map((record) => (
-            <div key={record.id} className="list-item">
-              <div className="list-item--col">
-                <span>{record.title}</span>
-                <span className="text-muted">
-                  {record.mode} - {record.playedAt}
-                </span>
-              </div>
-              <div className={record.status === 'win' ? '--green' : '--orange'}>
-                <strong>
-                  {record.status === 'win' ? record.cpm : `Loss ${record.cpm}`}
-                </strong>
-              </div>
+            <div key={record.scoreId} className="list-item">
+              <em className="text-muted">
+                {record.playedAt
+                  ? new Date(record.playedAt).toLocaleDateString('en-NZ', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })
+                  : ''}
+              </em>
+
+              <strong className="--green">{record.cpm} CPM</strong>
+
+              <strong className="text--right --blue">
+                {record.accuracy.toFixed(0)}% ACC
+              </strong>
             </div>
           ))
         )}
