@@ -51,7 +51,13 @@ export default function Dashboard() {
             >
               <strong className="--green">#{player.rank}</strong>
               <span>{player.username}</span>
-              <span className="--orange">{player.bestCpm} CPM</span>
+              {player.difficulty && (
+                <span className="text-muted">
+                  {player.difficulty.toUpperCase()}
+                </span>
+              )}
+              <span className="text-muted">{player.bestCpm} CPM</span>
+              <span className="--orange">{player.points} PTS</span>
             </div>
           ))}
         </div>
