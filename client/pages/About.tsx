@@ -1,7 +1,8 @@
-import PatImg from '../styles/image/pat.jpeg'
 import SanImg from '../styles/image/san.jpeg'
 import SqwImg from '../styles/image/sqw.jpeg'
 import PlnImg from '../styles/image/pln.jpeg'
+import YoungImg from '../styles/image/profile_image-young.webp'
+
 type TeamMember = {
   id: number
   image: string
@@ -13,10 +14,10 @@ type TeamMember = {
 const teamMembers: TeamMember[] = [
   {
     id: 1,
-    image: PatImg,
+    image: YoungImg,
     name: 'Young',
-    role: 'Team Leader',
-    bio: 'jbaiwbiabeijba',
+    role: 'Product Owner',
+    bio: "Hi, I'm Young, the Product Owner and Twin Dad Developer. Let’s be completely honest: the only reason I pitched this typing game project is for the hardcore early childhood coding education of my 2-year-old twin daughters. If they aren't hitting 100 CPM in JavaScript by age three, how will they survive in this economy?",
   },
   {
     id: 2,
