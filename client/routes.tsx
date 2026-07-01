@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard.tsx'
 import Auth from './pages/Auth.tsx'
 import Arena from './pages/Arena.tsx'
 import Profile from './pages/Profile.tsx'
+import About from './pages/About.tsx'
 import Register from './pages/Register.tsx'
 
 export default createRoutesFromElements(
@@ -13,5 +14,6 @@ export default createRoutesFromElements(
     <Route path="register" element={<Register />} />
     <Route path="arena" element={<Arena />} />
     <Route path="profile" element={<Profile />} />
+    <Route path="about" element={<About />} />
   </Route>,
 )
