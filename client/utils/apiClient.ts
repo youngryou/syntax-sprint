@@ -32,7 +32,12 @@ export async function getUserStats(id: string): Promise<Stat> {
   return response.json()
 }
 
-export async function postScore(cpm: number, accuracy: number): Promise<void> {
+export async function postScore(
+  cpm: number,
+  accuracy: number,
+  points: number,
+  difficulty: string,
+): Promise<void> {
   const { data } = await supabase.auth.getSession()
   const token = data.session?.access_token
 
@@ -42,7 +47,7 @@ export async function postScore(cpm: number, accuracy: number): Promise<void> {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ cpm, accuracy }),
+    body: JSON.stringify({ cpm, accuracy, points, difficulty }),
   })
 }
 

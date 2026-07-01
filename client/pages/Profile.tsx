@@ -120,6 +120,10 @@ export default function Profile() {
               {stats?.averageAccuracy || 0}%
             </div>
           </div>
+          <div className="text--center">
+            <div className="card-subtitle">BEST POINTS</div>
+            <div className="card-title --pink">{stats?.bestPoints || 0}</div>
+          </div>
         </div>
 
         <button className="btn btn--outline" onClick={handleLogout}>

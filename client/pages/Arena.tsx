@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router'
 import TypingField from '../components/TypingField.tsx'
 import { getRandomSnippet, postScore } from '../utils/apiClient.ts'
 import { Snippet } from '../../models/snippet.ts'
+import { getDifficultyMultiplier } from '../../models/difficulty.ts'
 import { supabase } from '../utils/supabase.ts'
 
 export default function Arena() {
@@ -40,6 +41,10 @@ export default function Arena() {
 
   const liveCpm = timer > 0 ? Math.round(correctCharsCount / (timer / 60)) : 0
 
+  const livePoints = snippet
+    ? Math.round(liveCpm * getDifficultyMultiplier(snippet.difficulty))
+    : 0
+
   useEffect(() => {
     if (gameState === 'playing') {
       const timerId = setInterval(() => {
@@ -70,11 +75,11 @@ export default function Arena() {
       supabase.auth.getSession().then(({ data: { session } }) => {
         if (session) {
           setIsLoggedIn(true)
-          postScore(liveCpm, liveAccuracy)
+          postScore(liveCpm, liveAccuracy, livePoints, snippet.difficulty)
         }
       })
     }
-  }, [userInput, gameState, snippet, liveCpm, liveAccuracy])
+  }, [userInput, gameState, snippet, liveCpm, liveAccuracy, livePoints])
 
   const timerFormat = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -116,6 +121,10 @@ export default function Arena() {
         <div className="text--center">
           <div className="card-subtitle">ACCURACY</div>
           <div className="card-title --blue">{liveAccuracy}%</div>
+        </div>
+        <div className="text--center">
+          <div className="card-subtitle">POINTS</div>
+          <div className="card-title --pink">{livePoints}</div>
         </div>
         <div className="text--center">
           <div className="card-subtitle">TIME</div>
