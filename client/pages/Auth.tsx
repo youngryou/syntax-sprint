@@ -1,15 +1,16 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { supabase } from '../utils/supabase'
+import { registerUser } from '../utils/apiClient'
 
 export default function Auth() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [username, setUsername] = useState('')
   const [message, setMessage] = useState('')
 
-  async function handleLogin() {
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault()
     setMessage('')
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -22,43 +23,17 @@ export default function Auth() {
       return
     }
 
-    navigate('/profile')
-  }
-
-  async function handleSignUp() {
-    setMessage('')
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    })
-
-    if (error) {
-      setMessage(error.message)
-      return
-    }
-
-    const token = data.session?.access_token
-
-    if (!token) {
-      setMessage('Check your email to confirm your account before logging in.')
-      return
-    }
-
-    const res = await fetch('/api/v1/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        username: username || email.split('@')[0],
-      }),
-    })
-
-    if (!res.ok) {
-      setMessage('Account created, but profile setup failed.')
-      return
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    const meta = user?.user_metadata
+    try {
+      await registerUser(
+        meta?.username || email.split('@')[0],
+        meta?.profileImage || null,
+      )
+    } catch {
+      // profile creation failure should not block login
     }
 
     navigate('/profile')
@@ -76,58 +51,49 @@ export default function Auth() {
 
         <div className="space" />
 
-        <div className="input-group">
-          <label htmlFor="username" className="card-subtitle">
-            Username
-          </label>
-          <input
-            id="username"
-            type="text"
-            className="input-field"
-            placeholder="syntax_sprinter"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
-          />
-        </div>
+        <form onSubmit={handleLogin}>
+          <div className="input-group">
+            <label htmlFor="email" className="card-subtitle">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              className="input-field"
+              placeholder="student@devacademy.co.nz"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </div>
 
-        <div className="input-group">
-          <label htmlFor="email" className="card-subtitle">
-            Email
-          </label>
-          <input
-            id="email"
-            type="email"
-            className="input-field"
-            placeholder="student@devacademy.co.nz"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </div>
+          <div className="input-group">
+            <label htmlFor="password" className="card-subtitle">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              className="input-field"
+              placeholder="**********"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              required
+            />
+          </div>
 
-        <div className="input-group">
-          <label htmlFor="password" className="card-subtitle">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="input-field"
-            placeholder="**********"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
+          {message && <p className="text-muted">{message}</p>}
 
-        {message && <p className="text-muted">{message}</p>}
+          <div className="card-actions--col">
+            <button type="submit" className="btn btn--blue">
+              LOGIN
+            </button>
 
-        <div className="card-actions--col">
-          <button className="btn btn--blue" onClick={handleLogin}>
-            LOGIN
-          </button>
-          <button className="btn btn--outline" onClick={handleSignUp}>
-            CREATE ACCOUNT
-          </button>
-        </div>
+            <Link to="/register" className="text-link text--right">
+              CREATE ACCOUNT
+            </Link>
+          </div>
+        </form>
       </div>
     </div>
   )
