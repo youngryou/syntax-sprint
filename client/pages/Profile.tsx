@@ -120,6 +120,10 @@ export default function Profile() {
               {stats?.averageAccuracy || 0}%
             </div>
           </div>
+          <div className="text--center">
+            <div className="card-subtitle">BEST POINTS</div>
+            <div className="card-title --pink">{stats?.bestPoints || 0}</div>
+          </div>
         </div>
 
         <button className="btn btn--outline" onClick={handleLogout}>
@@ -146,10 +150,20 @@ export default function Profile() {
                   : ''}
               </em>
 
+              {record.difficulty && (
+                <span className="text-muted">
+                  {record.difficulty.toUpperCase()}
+                </span>
+              )}
+
               <strong className="--green">{record.cpm} CPM</strong>
 
-              <strong className="text--right --blue">
+              <strong className="--blue">
                 {record.accuracy.toFixed(0)}% ACC
+              </strong>
+
+              <strong className="text--right --pink">
+                {record.points} PTS
               </strong>
             </div>
           ))

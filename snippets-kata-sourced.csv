@@ -1,0 +1,125 @@
+"language","code_text","logic_hint","difficulty"
+"javascript","const lastPlayed = songs.at(-1)","Get the last element of an array using Array.prototype.at()","easy"
+"javascript","const value = obj[key]","Access an object's value dynamically using bracket notation","easy"
+"javascript","const looksLikeEmail = str.includes('@') && str.includes('.')","Roughly check whether a string looks like an email address","easy"
+"javascript","const match = arr.find((item) => item.address === target.address)","Find the first array item whose address matches a target value","easy"
+"typescript","const fullName: string = `${firstName} ${lastName}`","Join a first and last name into one string with a template literal","easy"
+"javascript","const total = Number(a) + Number(b)","Coerce two string numbers and add them together","easy"
+"javascript","const evenCount = numbers.filter((n) => n % 2 === 0).length","Count how many numbers in an array are even","easy"
+"javascript","function updateMatrix(matrix, coords, value) {
+  const [row, column] = coords
+  matrix[row][column] = value
+  return matrix
+}","Update a 2D matrix at a given [row, column] coordinate with a new value","medium"
+"javascript","function countIf(array, fn) {
+  let count = 0
+  array.forEach((n) => (fn(n) ? count++ : false))
+  return count
+}","Count how many array items satisfy a predicate function","medium"
+"typescript","function fizzbuzz(n: number): string | number {
+  if (n % 15 === 0) return 'fizzbuzz'
+  if (n % 5 === 0) return 'buzz'
+  if (n % 3 === 0) return 'fizz'
+  return n
+}","Classic FizzBuzz: return 'fizz', 'buzz', 'fizzbuzz', or the number itself","medium"
+"typescript","function sumMatchingType(a: number | string, b: number | string) {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a + b
+  }
+  return String(Number(a) + Number(b))
+}","Sum two values, returning a number if both args are numbers, otherwise a string","medium"
+"typescript","function getNextTrafficLightColour(light: string): string {
+  if (light === 'green') return 'yellow'
+  if (light === 'yellow') return 'red'
+  return 'green'
+}","Cycle a traffic light through green, yellow, and red","medium"
+"javascript","function greetFullName(firstName, lastName, middleName) {
+  if (middleName) {
+    return `Hello ${firstName} ${middleName} ${lastName}`
+  }
+  return `Hello ${firstName} ${lastName}`
+}","Greet someone by full name, including an optional middle name if provided","medium"
+"javascript","router.get('/', async (req, res) => {
+  try {
+    const puppies = await getAllPuppies()
+    res.json({ puppies })
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to retrieve puppies' })
+  }
+})","Express route handler that fetches all puppies and returns a 500 on failure","medium"
+"javascript","export async function up(knex) {
+  await knex.schema.createTable('fruits', (table) => {
+    table.increments('id').primary()
+    table.string('name')
+    table.integer('average_grams_each')
+    table.string('added_by_user')
+  })
+}","Define a Knex migration that creates a fruits table with typed columns","hard"
+"javascript","function scoreGame(frames) {
+  let total = 0
+  frames.forEach((frame, index) => {
+    const next = frames[index + 1]
+    if (frame[0] === 10) {
+      total += frame[0] + next[0] + next[1]
+    } else if (frame[0] + frame[1] === 10) {
+      total += frame[0] + frame[1] + next[0]
+    } else {
+      total += frame[0] + frame[1]
+    }
+  })
+  return total
+}","Score a simplified bowling game, handling strikes and spares by peeking at the next frame","hard"
+"javascript","function scoreGame(frames) {
+  let total = 0
+  frames.forEach((frame, index) => {
+    const next = frames[index + 1] || []
+    const nextNext = frames[index + 2] || []
+    if (index === frames.length - 1) {
+      total += frame[0] + frame[1] + (frame[2] || 0)
+    } else if (frame[0] === 10 && next[0] === 10) {
+      total += frame[0] + next[0] + nextNext[0]
+    } else if (frame[0] === 10) {
+      total += frame[0] + next[0] + next[1]
+    } else if (frame[0] + frame[1] === 10) {
+      total += frame[0] + frame[1] + next[0]
+    } else {
+      total += frame[0] + frame[1]
+    }
+  })
+  return total
+}","Score a full bowling game including double strikes and a final-frame bonus roll","hard"
+"typescript","export async function addFruit(fruit, userId, db = connection) {
+  const fruitSnakeCase = {
+    name: fruit.name,
+    average_grams_each: fruit.averageGramsEach,
+    added_by_user: userId,
+  }
+  return db('fruits')
+    .insert(fruitSnakeCase)
+    .returning(columns)
+    .then((rows) => rows[0])
+}","Insert a new fruit row with Knex, converting camelCase fields to snake_case columns","hard"
+"typescript","export async function userCanEdit(fruitId, auth0Id, db = connection) {
+  return db('fruits')
+    .where({ id: fruitId })
+    .first()
+    .then((fruit) => {
+      if (fruit.added_by_user !== auth0Id) {
+        throw new Error('Unauthorized')
+      }
+    })
+}","Verify a user owns a fruit record before allowing them to edit it","hard"
+"typescript","router.put('/:id', checkJwt, async (req, res) => {
+  const { fruit } = req.body
+  const id = Number(req.params.id)
+  try {
+    await db.userCanEdit(id, req.auth.sub)
+    const updated = await db.updateFruit(id, fruit)
+    res.status(200).json({ fruit: updated })
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return res.status(403).send('Unauthorized')
+    }
+    res.status(500).send('Something went wrong')
+  }
+})","Express PUT handler that authorizes an edit, updates a record, and narrows the caught error","hard"

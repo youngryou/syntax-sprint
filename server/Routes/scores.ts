@@ -22,7 +22,9 @@ router.post('/', requireAuth, async (req, res) => {
     const id = req.user!.id
     const cpm = req.body.cpm
     const accuracy = req.body.accuracy
-    await scoresDb.addScore(id, cpm, accuracy)
+    const points = req.body.points
+    const difficulty = req.body.difficulty
+    await scoresDb.addScore(id, cpm, accuracy, points, difficulty)
     res.status(200).json('Score added to userID successfully.')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
