@@ -50,12 +50,11 @@ export default function App() {
           <nav className="nav-links">
             <NavLink to="/">Home</NavLink>
             <NavLink to="/arena">Arena</NavLink>
+            <NavLink to="/about">About</NavLink>
             {username ? (
               <>
                 <NavLink to="/profile">Profile</NavLink>
-                <button onClick={handleSignOut}>
-                  Logout
-                </button>
+                <button onClick={handleSignOut}>Logout</button>
                 <span className="--green">{username}</span>
               </>
             ) : (
