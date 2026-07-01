@@ -133,41 +133,33 @@ export default function Profile() {
 
       <div className="page-section">
         <h3 className="page-subtitle">Records</h3>
-        {records.length === 0 ? (
-          <div className="text-muted" style={{ padding: '1rem 0' }}>
-            <p>no record of games. play your first game.</p>
-          </div>
-        ) : (
-          records.map((record) => (
-            <div key={record.scoreId} className="list-item">
-              <em className="text-muted">
-                {record.playedAt
-                  ? new Date(record.playedAt).toLocaleDateString('en-NZ', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })
-                  : ''}
-              </em>
-
-              {record.difficulty && (
-                <span className="text-muted">
-                  {record.difficulty.toUpperCase()}
-                </span>
-              )}
-
-              <strong className="--green">{record.cpm} CPM</strong>
-
-              <strong className="--blue">
-                {record.accuracy.toFixed(0)}% ACC
-              </strong>
-
-              <strong className="text--right --pink">
-                {record.points} PTS
-              </strong>
+        <div className="list-container">
+          {records.length === 0 ? (
+            <div className="text-muted" style={{ padding: '1rem 0' }}>
+              <p>no record of games. play your first game.</p>
             </div>
-          ))
-        )}
+          ) : (
+            records.map((record) => (
+              <div key={record.scoreId} className="list-item">
+                <em className="text-muted">
+                  {record.playedAt
+                    ? new Date(record.playedAt).toLocaleDateString('en-NZ', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })
+                    : ''}
+                </em>
+
+                <strong className="--green">{record.cpm} CPM</strong>
+
+                <strong className="text--right --blue">
+                  {record.accuracy.toFixed(0)}% ACC
+                </strong>
+              </div>
+            ))
+          )}
+        </div>
       </div>
     </div>
   )
