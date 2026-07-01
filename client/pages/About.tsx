@@ -1,7 +1,8 @@
 import SanImg from '../styles/image/san.jpeg'
 import SqwImg from '../styles/image/sqw.jpeg'
-import PlnImg from '../styles/image/pln.jpeg'
 import YoungImg from '../styles/image/profile_image-young.webp'
+import DanielImg from '../styles/image/daniel.webp'
+import ParkieImg from '../styles/image/parkie.webp'
 
 type TeamMember = {
   id: number
@@ -21,31 +22,31 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: 2,
-    image: PlnImg,
+    image: DanielImg,
     name: 'Daniel',
-    role: 'Dev 2',
-    bio: 'Wdsnjndjfns',
+    role: 'Git Keeper',
+    bio: 'Hey, I’m Daniel. When im not coding I like going for a ride on my motorbike, having friends over for a BBQ or working on projects. I had fun working on this project and working as part of a team. Cheers! ',
   },
   {
     id: 3,
     image: SanImg,
     name: 'Maneet',
-    role: 'Dev 3',
-    bio: 'jfneojn.',
+    role: 'Agile Facilitator',
+    bio: 'I like turtles.',
   },
   {
     id: 4,
     image: SqwImg,
     name: 'Tamahuia',
-    role: 'Dev 4',
+    role: 'Vibes Watcher',
     bio: 'sdjnvoje',
   },
   {
     id: 5,
-    image: PlnImg,
+    image: ParkieImg,
     name: 'Parkie',
-    role: 'Dev 5/ Git Keeper',
-    bio: 'ummm i dont know what to write',
+    role: 'Git Keeper',
+    bio: "Hi, I'm Parkie! I'm a learning developer. While this project has thrown quite a few challenges my way, I’m incredibly excited to use this app to practice by myself and sharpen my coding skills.",
   },
 ]
 
@@ -99,8 +100,8 @@ export default function About() {
               {member.name || 'Unknown'}
             </h2>
             <div
-              className="card-subtitle text-muted"
-              style={{ marginBottom: '.1rem' }}
+              className="card-subtitle"
+              style={{ marginBottom: '.1rem', color: 'var(--accent-green)' }}
             >
               {member.role}
             </div>

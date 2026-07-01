@@ -1,43 +1,34 @@
--- Seed data for Syntax Sprint
--- Run in the Supabase SQL Editor (runs as service_role, bypasses RLS)
--- Users must already exist in auth.users before running this script
-
--- Users
-insert into public.users (user_id, username) values
-  ('b46dc1df-f137-429e-8797-642082a288ef', 'ByteRacer'),
-  ('9e2014e4-1f7a-4686-aa69-6ec01379fc82', 'KeystrokeKing'),
-  ('46c834f8-a2e8-46c4-9ab7-7ce4d97ae7e1', 'CodeSniper'),
-  ('ba3b8843-ffe6-47bd-ba5b-8f9a4e3c130c', 'LoopLegend'),
-  ('359e40ae-1429-454d-b994-8bea7b986035', 'SyntaxNinja');
-
--- Scores (2 per user)
--- points = round(cpm * difficulty multiplier); easy 1, medium 1.3, hard 1.6
-insert into public.scores (user_id, cpm, accuracy, points, difficulty, played_at) values
-  -- ByteRacer
-  ('b46dc1df-f137-429e-8797-642082a288ef', 187, 87.3, 243, 'medium', '2026-06-25 08:14:22+00'),
-  ('b46dc1df-f137-429e-8797-642082a288ef', 243, 94.1, 389, 'hard', '2026-06-25 11:47:05+00'),
-  -- KeystrokeKing
-  ('9e2014e4-1f7a-4686-aa69-6ec01379fc82', 312, 72.8, 312, 'easy', '2026-06-25 13:02:38+00'),
-  ('9e2014e4-1f7a-4686-aa69-6ec01379fc82', 198, 98.5, 317, 'hard', '2026-06-25 15:30:11+00'),
-  -- CodeSniper
-  ('46c834f8-a2e8-46c4-9ab7-7ce4d97ae7e1', 274, 81.6, 356, 'medium', '2026-06-25 17:55:49+00'),
-  ('46c834f8-a2e8-46c4-9ab7-7ce4d97ae7e1', 156, 65.4, 156, 'easy', '2026-06-25 20:08:33+00'),
-  -- LoopLegend
-  ('ba3b8843-ffe6-47bd-ba5b-8f9a4e3c130c', 298, 90.2, 477, 'hard', '2026-06-25 22:41:17+00'),
-  ('ba3b8843-ffe6-47bd-ba5b-8f9a4e3c130c', 221, 76.9, 287, 'medium', '2026-06-26 00:19:44+00'),
-  -- SyntaxNinja
-  ('359e40ae-1429-454d-b994-8bea7b986035', 265, 88.7, 424, 'hard', '2026-06-26 03:37:02+00'),
-  ('359e40ae-1429-454d-b994-8bea7b986035', 220, 70.2, 220, 'easy', '2026-06-26 07:52:28+00');
 
 -- Snippets
 insert into public.snippets (language, code_text, logic_hint, difficulty) values
-  ('javascript', 'const x = arr.filter(n => n % 2 === 0)', 'Filter even numbers from an array', 'easy'),
-  ('javascript', 'const sum = arr.reduce((acc, curr) => acc + curr, 0)', 'Calculate the total sum of all numbers in an array', 'easy'),
-  ('javascript', E'function flatten(arr) {\n  return arr.reduce((acc, val) =>\n    acc.concat(Array.isArray(val) ? flatten(val) : val),\n  []);\n}', 'Recursively flatten a deeply nested array into a single level', 'medium'),
-  ('javascript', E'const curry = (fn) => {\n  const curried = (...args) =>\n    args.length >= fn.length\n      ? fn(...args)\n      : (...nextArgs) => curried(...args, ...nextArgs);\n  return curried;\n}', 'Convert a function that takes multiple arguments into a sequence of nesting functions', 'hard'),
-  ('python', 'evens = [n for n in numbers if n % 2 == 0]', 'Use list comprehension to filter out even numbers from a list', 'easy'),
-  ('python', 'inverted = {v: k for k, v in original_dict.items()}', 'Swap keys and values in a dictionary assuming all values are unique', 'easy'),
-  ('python', 'is_anagram = lambda s1, s2: sorted(s1) == sorted(s2)', 'Check if two strings are anagrams by comparing their sorted character representations', 'medium'),
-  ('python', E'while low <= high:\n    mid = (low + high) // 2\n    if arr[mid] == target:\n        return mid\n    elif arr[mid] < target:\n        low = mid + 1\n    else:\n        high = mid - 1', 'Implement standard iterative binary search on a sorted array', 'medium'),
-  ('typescript', E'function isString(val: unknown): val is string {\n  return typeof val === "string";\n}', 'Define a custom type guard to narrow down an unknown type to a string safely', 'medium'),
-  ('typescript', E'type DeepReadonly<T> = {\n  readonly [P in keyof T]: T[P] extends object\n    ? DeepReadonly<T[P]>\n    : T[P]\n};', 'Create a utility type that makes all properties of an object deeply immutable', 'hard');
+  ('javascript', E'function totalScore(frames) {\n  let total = 0\n\n  for (let i = 0; i < frames.length; i++) {\n    total += scoreFrame(frames[i], frames[i + 1], frames[i + 2])\n  }\n\n  return total\n}', 'Calculate the total bowling score by iterating through frames', 'medium'),
+  ('typescript', E'export async function getFruits(db = connection): Promise<Fruit[]> {\n  return db(''fruits'')\n    .select(...columns)\n    .orderBy(''id'')\n}', 'Retrieve all fruits from the database ordered by ID using Knex', 'easy'),
+  ('javascript', E'export function up(knex) {\n  return knex.schema.createTable(''categories'', (table) => {\n    table.increments(''id'').primary()\n    table.string(''name'').notNullable()\n  })\n}', 'Create a categories table with primary key and name columns using Knex migration', 'medium'),
+  ('javascript', E'router.get(''/'', async (req, res, next) => {\n  try {\n    const tools = await toolsService.getTools()\n\n    res.json(tools)\n  } catch (e) {\n    next(e)\n  }\n})', 'Define an Express GET route to fetch and return a list of tools', 'medium'),
+  ('typescript', E'return useMutation({\n  mutationFn: async (userData: {\n    name: string\n    email: string\n    profileImage: string\n  }) => {\n    const token = await getAccessTokenSilently()\n    return API.addUser(userData, token)\n  },\n  onSuccess: () => {\n    queryClient.invalidateQueries({ queryKey: [''user''] })\n  },\n})', 'Configure a React Query mutation to add a user with authentication and invalidate cache on success', 'hard'),
+  ('javascript', E'const handleRandomUser = () => {\n  const randomId = Math.floor(Math.random() * 10) + 1\n  setUserId(randomId)\n}', 'Generate a random user ID between 1 and 10 and update the component state', 'easy'),
+  ('javascript', E'describe(''Deleting an Event'', () => {\n  it(''can be deleted'', async () => {\n    const res = await request(server).delete(''/api/v1/events/1'')\n    expect(res.status).toBe(204)\n  })\n})', 'Write an integration test using Supertest to verify that an event can be successfully deleted', 'medium'),
+  ('typescript', E'document.addEventListener(''DOMContentLoaded'', () => {\n  createRoot(document.getElementById(''app'') as HTMLElement).render(<App />)\n})', 'Wait for the DOM to load, then mount the React app via createRoot', 'easy'),
+  ('typescript', E'export async function getRandomPokemon(): Promise<Pokemon> {\n  const randomId = Math.floor(Math.random() * 1010) + 1\n  return getPokemon(randomId)\n}', 'Generate a random ID and delegate to another function to fetch and return the result', 'easy'),
+  ('typescript', E'const {\n  data: pokemon,\n  isPending,\n  isError,\n  error,\n} = useQuery({\n  queryKey: [''pokemon'', name],\n  queryFn: () => fetchPokemonByName(name!),\n})\nif (isPending) return <LoadingSpinner />\nif (isError) return <p>{error.message}</p>', 'Set up a data query keyed on a name and handle loading and error states with early returns', 'medium'),
+  ('typescript', E'export async function getAllMovies(): Promise<watchlistmovies[]> {\n  const movies = await db(''movies'').select(selectArray)\n  return movies as watchlistmovies[]\n}', 'Query all rows from a table with Knex and cast the result to the expected type', 'medium'),
+  ('javascript', 'const lastPlayed = songs.at(-1)', 'Get the last element of an array using Array.prototype.at()', 'easy'),
+  ('javascript', 'const value = obj[key]', 'Access an object''s value dynamically using bracket notation', 'easy'),
+  ('javascript', 'const looksLikeEmail = str.includes(''@'') && str.includes(''.'')', 'Roughly check whether a string looks like an email address', 'easy'),
+  ('javascript', 'const match = arr.find((item) => item.address === target.address)', 'Find the first array item whose address matches a target value', 'easy'),
+  ('typescript', 'const fullName: string = `${firstName} ${lastName}`', 'Join a first and last name into one string with a template literal', 'easy'),
+  ('javascript', 'const total = Number(a) + Number(b)', 'Coerce two string-encoded numbers and add them together', 'easy'),
+  ('javascript', 'const evenCount = numbers.filter((n) => n % 2 === 0).length', 'Count how many numbers in an array are even', 'easy'),
+  ('javascript', E'function updateMatrix(matrix, coords, value) {\n  const [row, column] = coords\n  matrix[row][column] = value\n  return matrix\n}', 'Update a 2D matrix at a given [row, column] coordinate with a new value', 'medium'),
+  ('javascript', E'function countIf(array, fn) {\n  let count = 0\n  array.forEach((n) => (fn(n) ? count++ : false))\n  return count\n}', 'Count how many array items satisfy a predicate function', 'medium'),
+  ('typescript', E'function fizzbuzz(n: number): string | number {\n  if (n % 15 === 0) return ''fizzbuzz''\n  if (n % 5 === 0) return ''buzz''\n  if (n % 3 === 0) return ''fizz''\n  return n\n}', 'Classic FizzBuzz: return fizz, buzz, fizzbuzz, or the number itself', 'medium'),
+  ('typescript', E'function sumMatchingType(a: number | string, b: number | string) {\n  if (typeof a === ''number'' && typeof b === ''number'') {\n    return a + b\n  }\n  return String(Number(a) + Number(b))\n}', 'Sum two values, returning a number if both args are numbers, otherwise a string', 'medium'),
+  ('typescript', E'function getNextTrafficLightColour(light: string): string {\n  if (light === ''green'') return ''yellow''\n  if (light === ''yellow'') return ''red''\n  return ''green''\n}', 'Cycle a traffic light through green, yellow, and red', 'medium'),
+  ('javascript', E'function greetFullName(firstName, lastName, middleName) {\n  if (middleName) {\n    return `Hello ${firstName} ${middleName} ${lastName}`\n  }\n  return `Hello ${firstName} ${lastName}`\n}', 'Greet someone by full name, including an optional middle name if provided', 'medium'),
+  ('javascript', E'router.get(''/'', async (req, res) => {\n  try {\n    const items = await getAllItems()\n    res.json({ items })\n  } catch (err) {\n    res.status(500).json({ error: ''Failed to retrieve items'' })\n  }\n})', 'Fetch a list of records and return a 500 response if the query fails', 'medium'),
+  ('javascript', E'export async function up(knex) {\n  await knex.schema.createTable(''items'', (table) => {\n    table.increments(''id'').primary()\n    table.string(''name'')\n    table.integer(''quantity'')\n    table.string(''added_by_user'')\n  })\n}', 'Define a Knex migration that creates a table with a primary key and typed columns', 'hard'),
+  ('javascript', E'function scoreGame(frames) {\n  let total = 0\n  frames.forEach((frame, index) => {\n    const next = frames[index + 1]\n    if (frame[0] === 10) {\n      total += frame[0] + next[0] + next[1]\n    } else if (frame[0] + frame[1] === 10) {\n      total += frame[0] + frame[1] + next[0]\n    } else {\n      total += frame[0] + frame[1]\n    }\n  })\n  return total\n}', 'Score a simplified bowling game, handling strikes and spares by peeking at the next frame', 'hard'),
+  ('javascript', E'function scoreGame(frames) {\n  let total = 0\n  frames.forEach((frame, index) => {\n    const next = frames[index + 1] || []\n    const nextNext = frames[index + 2] || []\n    if (index === frames.length - 1) {\n      total += frame[0] + frame[1] + (frame[2] || 0)\n    } else if (frame[0] === 10 && next[0] === 10) {\n      total += frame[0] + next[0] + nextNext[0]\n    } else if (frame[0] === 10) {\n      total += frame[0] + next[0] + next[1]\n    } else if (frame[0] + frame[1] === 10) {\n      total += frame[0] + frame[1] + next[0]\n    } else {\n      total += frame[0] + frame[1]\n    }\n  })\n  return total\n}', 'Score a full bowling game including double strikes and a final-frame bonus roll', 'hard'),
+  ('typescript', E'export async function addItem(item, userId, db = connection) {\n  const itemSnakeCase = {\n    name: item.name,\n    quantity: item.quantity,\n    added_by_user: userId,\n  }\n  return db(''items'')\n    .insert(itemSnakeCase)\n    .returning(columns)\n    .then((rows) => rows[0])\n}', 'Insert a new record into a table with Knex, converting camelCase fields to snake_case columns', 'hard'),
+  ('typescript', E'export async function userCanEdit(itemId, userAuthId, db = connection) {\n  return db(''items'')\n    .where({ id: itemId })\n    .first()\n    .then((item) => {\n      if (item.added_by_user !== userAuthId) {\n        throw new Error(''Unauthorized'')\n      }\n    })\n}', 'Verify a user owns a record before allowing them to edit it', 'hard'),
+  ('typescript', E'router.put(''/:id'', checkJwt, async (req, res) => {\n  const { item } = req.body\n  const id = Number(req.params.id)\n  try {\n    await db.userCanEdit(id, req.auth.sub)\n    const updated = await db.updateItem(id, item)\n    res.status(200).json({ item: updated })\n  } catch (error) {\n    if (error instanceof Error && error.message === ''Unauthorized'') {\n      return res.status(403).send(''Unauthorized'')\n    }\n    res.status(500).send(''Something went wrong'')\n  }\n})', 'Express PUT handler that authorizes an edit, updates a record, and narrows the caught error', 'hard');
