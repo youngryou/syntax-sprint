@@ -1,6 +1,3 @@
--- Seed data for Syntax Sprint
--- Run in the Supabase SQL Editor (runs as service_role, bypasses RLS)
--- or via SQLTools against the pooler connection.
 
 -- Snippets
 insert into public.snippets (language, code_text, logic_hint, difficulty) values

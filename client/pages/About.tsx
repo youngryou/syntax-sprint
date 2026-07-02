@@ -1,4 +1,4 @@
-import SanImg from '../styles/image/san.jpeg'
+import ManeetImg from '../styles/image/LM67img.jpg'
 import SqwImg from '../styles/image/sqw.jpeg'
 import YoungImg from '../styles/image/profile_image-young.webp'
 import DanielImg from '../styles/image/daniel.webp'
@@ -30,10 +30,10 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: 3,
-    image: SanImg,
+    image: ManeetImg,
     name: 'Maneet',
     role: 'Agile Facilitator',
-    bio: 'I like turtles.',
+    bio: "I'm the highest scoring player - LoveMaster67. I'm also the reason the points system is airtight, and the Supabase authentication works. If you can find a bug faster than you can find a red flag, we should talk. 😎",
   },
   {
     id: 4,
