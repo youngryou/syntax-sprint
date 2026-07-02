@@ -3,6 +3,7 @@ import SqwImg from '../styles/image/sqw.jpeg'
 import YoungImg from '../styles/image/profile_image-young.webp'
 import DanielImg from '../styles/image/daniel.webp'
 import ParkieImg from '../styles/image/parkie.webp'
+import TamaImg from '../styles/image/tama.webp'
 
 type TeamMember = {
   id: number
@@ -25,7 +26,7 @@ const teamMembers: TeamMember[] = [
     image: DanielImg,
     name: 'Daniel',
     role: 'Git Keeper',
-    bio: 'Hey, I’m Daniel. When im not coding I like going for a ride on my motorbike, having friends over for a BBQ or working on projects. I had fun working on this project and working as part of a team. Cheers! ',
+    bio: 'When im not coding I like going for a ride on my motorbike, having friends over for a BBQ or working on projects. I had fun working on this project and working as part of a team. Cheers! ',
   },
   {
     id: 3,
@@ -36,10 +37,10 @@ const teamMembers: TeamMember[] = [
   },
   {
     id: 4,
-    image: SqwImg,
+    image: TamaImg,
     name: 'Tamahuia',
     role: 'Vibes Watcher',
-    bio: 'sdjnvoje',
+    bio: 'Hey, I’m Tamahuia! I’m usually the one making sure the team’s got good vibes, good tunes, and something to laugh about when things get stressful. Outside of coding you’ll probably find me at the gym, gaming, or coming up with my next random project idea. Life’s too short to build boring stuff.',
   },
   {
     id: 5,

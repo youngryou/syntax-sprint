@@ -24,6 +24,8 @@ create table public.scores (
   user_id uuid not null references public.users (user_id) on delete cascade,
   cpm numeric not null check (cpm >= 0),
   accuracy numeric not null check (accuracy >= 0 and accuracy <= 100),
+  points numeric not null default 0 check (points >= 0),
+  difficulty text,
   played_at timestamptz not null default now()
 );
 

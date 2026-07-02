@@ -4,7 +4,7 @@ import { StatData } from '../../models/stat'
 import { LeaderboardEntry } from '../../models/scores'
 
 const scoreQuery =
-  'scoreId:score_id, userId:user_id, cpm, accuracy, playedAt:played_at'
+  'scoreId:score_id, userId:user_id, cpm, accuracy, points, difficulty, playedAt:played_at'
 
 export async function getScoresByUserId(userId: string): Promise<Score[]> {
   const { data, error } = await supabase
@@ -27,8 +27,8 @@ export async function getScoresByUserId(userId: string): Promise<Score[]> {
 export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
   const { data, error } = await supabase
     .from('scores')
-    .select('cpm, accuracy, played_at, users!inner(username)')
-    .order('cpm', { ascending: false })
+    .select('cpm, accuracy, points, difficulty, played_at, users!inner(username)')
+    .order('points', { ascending: false })
 
   if (error) {
     throw new Error(`Supabase DB Error: ${error.message}`)
@@ -47,6 +47,8 @@ export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
         rank: 0,
         username,
         bestCpm: row.cpm,
+        points: row.points,
+        difficulty: row.difficulty,
         accuracy: row.accuracy,
         playedAt: row.played_at,
       })
@@ -61,7 +63,7 @@ export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
 export async function getUserBestStats(userId: string): Promise<StatData> {
   const { data, error } = await supabase
     .from('scores')
-    .select('cpm, accuracy')
+    .select('cpm, accuracy, points')
     .eq('user_id', userId)
 
   if (error) {
@@ -69,10 +71,11 @@ export async function getUserBestStats(userId: string): Promise<StatData> {
   }
 
   if (!data || data.length === 0) {
-    return { bestCpm: 0, averageAccuracy: 0 }
+    return { bestCpm: 0, averageAccuracy: 0, bestPoints: 0 }
   }
 
   const bestCpm = Math.max(...data.map((score) => Number(score.cpm)))
+  const bestPoints = Math.max(...data.map((score) => Number(score.points)))
 
   const totalAccuracy = data.reduce(
     (sum, score) => sum + Number(score.accuracy),
@@ -81,13 +84,19 @@ export async function getUserBestStats(userId: string): Promise<StatData> {
 
   const averageAccuracy = Number((totalAccuracy / data.length).toFixed(2))
 
-  return { bestCpm, averageAccuracy } as StatData
+  return { bestCpm, averageAccuracy, bestPoints } as StatData
 }
 
-export async function addScore(user_id: string, cpm: number, accuracy: number) {
+export async function addScore(
+  user_id: string,
+  cpm: number,
+  accuracy: number,
+  points?: number,
+  difficulty?: string,
+) {
   const { error } = await supabase
     .from('scores')
-    .insert({ user_id, cpm, accuracy })
+    .insert({ user_id, cpm, accuracy, points, difficulty })
   if (error) {
     throw new Error(`Supabase DB Error: ${error.message}`)
   }
