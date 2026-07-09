@@ -1,9 +1,8 @@
-import ManeetImg from '../styles/image/LM67img.jpg'
-import SqwImg from '../styles/image/sqw.jpeg'
-import YoungImg from '../styles/image/profile_image-young.webp'
-import DanielImg from '../styles/image/daniel.webp'
-import ParkieImg from '../styles/image/parkie.webp'
-import TamaImg from '../styles/image/tama.webp'
+import ManeetImg from '../styles/image/san.jpeg'
+import YoungImg from '../styles/image/pat.jpeg'
+import DanielImg from '../styles/image/pln.jpeg'
+import ParkieImg from '../styles/image/pat.jpeg'
+import TamaImg from '../styles/image/sqw.jpeg'
 
 type TeamMember = {
   id: number
@@ -19,35 +18,35 @@ const teamMembers: TeamMember[] = [
     image: YoungImg,
     name: 'Young',
     role: 'Product Owner',
-    bio: "Hi, I'm Young, the Product Owner and Twin Dad Developer. Let’s be completely honest: the only reason I pitched this typing game project is for the hardcore early childhood coding education of my 2-year-old twin daughters. If they aren't hitting 100 CPM in JavaScript by age three, how will they survive in this economy?",
+    bio: "Hi, I'm Young!",
   },
   {
     id: 2,
     image: DanielImg,
     name: 'Daniel',
     role: 'Git Keeper',
-    bio: 'When im not coding I like going for a ride on my motorbike, having friends over for a BBQ or working on projects. I had fun working on this project and working as part of a team. Cheers! ',
+    bio: "Hi, I'm Daniel!",
   },
   {
     id: 3,
     image: ManeetImg,
     name: 'Maneet',
     role: 'Agile Facilitator',
-    bio: "I'm the highest scoring player - LoveMaster67. I'm also the reason the points system is airtight, and the Supabase authentication works. If you can find a bug faster than you can find a red flag, we should talk. 😎",
+    bio: "Hi, I'm Maneet!",
   },
   {
     id: 4,
     image: TamaImg,
     name: 'Tamahuia',
     role: 'Vibes Watcher',
-    bio: 'Hey, I’m Tamahuia! I’m usually the one making sure the team’s got good vibes, good tunes, and something to laugh about when things get stressful. Outside of coding you’ll probably find me at the gym, gaming, or coming up with my next random project idea. Life’s too short to build boring stuff.',
+    bio: "Hi, I'm Tamahuia!",
   },
   {
     id: 5,
     image: ParkieImg,
     name: 'Parkie',
     role: 'Git Keeper',
-    bio: "Hi, I'm Parkie! I'm a learning developer. While this project has thrown quite a few challenges my way, I’m incredibly excited to use this app to practice by myself and sharpen my coding skills.",
+    bio: "Hi, I'm Parkie!",
   },
 ]
 
